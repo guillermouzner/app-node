@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { validationResult } from "express-validator";
 
 export const registerForm = (req, res) => {
-    res.render("register", { mensajes: req.flash("mensajes") });
+    res.render("register");
 };
 
 export const registerUser = async (req, res) => {
@@ -58,7 +58,7 @@ export const confirmarCuenta = async (req, res) => {
 };
 
 export const loginForm = (req, res) => {
-    res.render("login", { mensajes: req.flash("mensajes") });
+    res.render("login");
 };
 
 export const loginUser = async (req, res) => {
@@ -96,10 +96,8 @@ export const cerrarSesion1 = (req, res) => {
 };
 
 export const cerrarSesion = (req, res) => {
-    req.logout(function (err) {
-        if (err) {
-            return next(err);
-        }
+    req.logout((err) => {
+        if (err) return next(err);
         res.redirect("/auth/login");
     });
 };

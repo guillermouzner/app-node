@@ -8,6 +8,8 @@ import session from "express-session";
 import flash from "connect-flash";
 import passport from "passport";
 import { User } from "./models/User.js";
+import csrf from "csurf";
+
 const app = express();
 
 app.use(
@@ -35,6 +37,8 @@ passport.deserializeUser(async (user, done) => {
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(csrf());
+
 const hbs = create({
     extname: ".hbs",
     partialsDir: ["views/components"],
@@ -43,6 +47,12 @@ const hbs = create({
 app.engine(".hbs", hbs.engine);
 app.set("view engine", ".hbs");
 app.set("views", "./views");
+
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
+    res.locals.mensajes = req.flash("mensajes");
+    next();
+});
 
 app.use("/", routerHome);
 app.use("/auth", routerAuth);
