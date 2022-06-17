@@ -3,6 +3,7 @@ import "./database/connectdb.js";
 import express from "express";
 import { create } from "express-handlebars";
 import routerHome from "./routes/home.route.js";
+import routerAuth from "./routes/auth.route.js";
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -17,6 +18,7 @@ app.set("view engine", ".hbs");
 app.set("views", "./views");
 
 app.use("/", routerHome);
+app.use("/auth", routerAuth);
 
 app.use(express.static("public"));
 
