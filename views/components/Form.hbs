@@ -1,4 +1,14 @@
-<form action="/" method="post">
-    <input type="text" placeholder="ingresar Url" name="originalLink" class="form-control my-2">
-    <button type="submit" class="btn btn-primary w-100 mb-2">Agregar Url</button>
-</form>
+{{#if url}}
+
+    <form action="/editar/{{url._id}}" method="post">
+        <input value ="{{url.originalLink}}" type="text" placeholder="ingresar Url" name="originalLink" class="form-control my-2">
+        <button type="submit" class="btn btn-warning w-100 mb-2">Editarl Url</button>
+    </form>
+
+{{ else }}
+    <form action="/" method="post">
+        <input type="text" placeholder="ingresar Url" name="originalLink" class="form-control my-2">
+        <button type="submit" class="btn btn-primary w-100 mb-2">Agregar Url</button>
+    </form>
+
+{{/if}}
