@@ -4,7 +4,21 @@ import express from "express";
 import { create } from "express-handlebars";
 import routerHome from "./routes/home.route.js";
 import routerAuth from "./routes/auth.route.js";
+import session from "express-session";
+import flash from "connect-flash";
+
 const app = express();
+
+app.use(
+    session({
+        secret: "keyboard cat",
+        resave: false,
+        saveUninitialized: false,
+        name: "secret-name-web",
+    })
+);
+
+app.use(flash());
 
 app.use(express.urlencoded({ extended: true }));
 

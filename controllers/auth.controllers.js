@@ -1,10 +1,17 @@
 import { User } from "../models/User.js";
 import { nanoid } from "nanoid";
+import { validationResult } from "express-validator";
+
 export const registerForm = (req, res) => {
-    res.render("register");
+    res.render("register", { mensajes: req.flash("mensajes") });
 };
 
 export const registerUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash("mensajes", errors.array());
+        return res.redirect("/auth/register");
+    }
     const { userName, email, password } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -19,11 +26,15 @@ export const registerUser = async (req, res) => {
         await newUser.save();
 
         // enviar correo electronico primero
-
+        req.flash("mensajes", [
+            { msg: "confirma tu correo electronico para ingresar" },
+        ]);
         res.redirect("/auth/login");
     } catch (error) {
-        console.log(error.message);
-        res.redirect("/auth/register");
+        req.flash("mensajes", [{ msg: error.message }]);
+        return res.redirect("/auth/register");
+        // return res.status(400).json(error.message);
+        // res.redirect("/auth/register");
     }
 };
 
@@ -37,16 +48,25 @@ export const confirmarCuenta = async (req, res) => {
         user.tokenConfirm = null;
 
         await user.save();
-        res.redirect("/auth/login");
+        req.flash("mensajes", [
+            { msg: "Cuenta verificada, puedes iniciar sesión." },
+        ]);
+        return res.redirect("/auth/login");
     } catch (error) {
         console.log(error);
     }
 };
 
 export const loginForm = (req, res) => {
-    res.render("login");
+    res.render("login", { mensajes: req.flash("mensajes") });
 };
+
 export const loginUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash("mensajes", errors.array());
+        return res.redirect("/auth/login");
+    }
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -61,6 +81,7 @@ export const loginUser = async (req, res) => {
 
         res.redirect("/");
     } catch (error) {
-        res.send(error.message);
+        req.flash("mensajes", [{ msg: error.message }]);
+        return res.redirect("/auth/login");
     }
 };
