@@ -6,7 +6,8 @@ import routerHome from "./routes/home.route.js";
 import routerAuth from "./routes/auth.route.js";
 import session from "express-session";
 import flash from "connect-flash";
-
+import passport from "passport";
+import { User } from "./models/User.js";
 const app = express();
 
 app.use(
@@ -19,6 +20,18 @@ app.use(
 );
 
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+    done(null, { id: user._id, userName: user.userName });
+}); // ==> req.user
+
+passport.deserializeUser(async (user, done) => {
+    const userdb = await User.findById(user._id);
+    return done(null, { id: user._id, userName: user.userName });
+});
 
 app.use(express.urlencoded({ extended: true }));
 

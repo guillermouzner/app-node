@@ -8,10 +8,11 @@ import {
     redireccion,
 } from "../controllers/home.controller.js";
 import { validarUrl } from "../middlewares/urlValidator.js";
+import { verificarUser } from "../middlewares/userValidator.js";
 
 const router = Router();
 
-router.get("/", leerUrls);
+router.get("/", verificarUser, leerUrls);
 router.post("/", validarUrl, agregarUrl);
 router.get("/eliminar/:id", eliminarUrl);
 

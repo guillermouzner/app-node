@@ -5,6 +5,7 @@ import {
     confirmarCuenta,
     loginForm,
     loginUser,
+    cerrarSesion,
 } from "../controllers/auth.controllers.js";
 import {
     bodyRegisterValidator,
@@ -21,4 +22,5 @@ router.get("/confirmar/:token", confirmarCuenta);
 router.get("/login", loginForm);
 router.post("/login", bodyLoginValidator, loginUser);
 
+router.get("/logout", cerrarSesion);
 export default router;

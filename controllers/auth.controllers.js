@@ -79,9 +79,27 @@ export const loginUser = async (req, res) => {
         if (!userPassword)
             return res.status(403).json({ error: "Constraseña incorrecta" });
 
-        res.redirect("/");
+        // esto me crea la sesion a travez de passport
+        req.login(user, function (err) {
+            if (err) throw new Error("Error al crear sesion");
+            return res.redirect("/");
+        });
     } catch (error) {
         req.flash("mensajes", [{ msg: error.message }]);
         return res.redirect("/auth/login");
     }
+};
+
+export const cerrarSesion1 = (req, res) => {
+    req.logout();
+    return res.redirect("/auth/login");
+};
+
+export const cerrarSesion = (req, res) => {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/auth/login");
+    });
 };
