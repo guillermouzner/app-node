@@ -26,13 +26,15 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// crea la sesion
 passport.serializeUser((user, done) => {
     done(null, { id: user._id, userName: user.userName });
 }); // ==> req.user
 
+// actualiza la sesion
 passport.deserializeUser(async (user, done) => {
-    const userdb = await User.findById(user._id);
-    return done(null, { id: user._id, userName: user.userName });
+    const userDB = await User.findById(user.id).exec();
+    return done(null, { id: userDB._id, userName: userDB.userName }); //se guardará en req.user
 });
 
 app.use(express.urlencoded({ extended: true }));

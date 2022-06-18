@@ -12,6 +12,11 @@ const urlSchema = new Schema({
         unique: true,
         required: true,
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
 });
 
 export const Url = model("Url", urlSchema);

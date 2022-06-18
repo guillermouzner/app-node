@@ -8,10 +8,13 @@ export const validarUrl = async (req, res, next) => {
         }
 
         await axios.get(originalLink);
-
         next();
     } catch (error) {
-        console.log(error.message);
-        res.send("Invalid URL");
+        if (error.message === "Invalid URL")
+            req.flash("mensajes", [{ msg: "Url no valida" }]);
+        if (error.message.startsWith("getaddrinfo ENOTFOUND"))
+            req.flash("mensajes", [{ msg: "Url no valida" }]);
+        // req.flash("mensajes", [{ msg: error.message }]);
+        return res.redirect("/");
     }
 };

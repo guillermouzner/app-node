@@ -90,10 +90,10 @@ export const loginUser = async (req, res) => {
     }
 };
 
-export const cerrarSesion1 = (req, res) => {
-    req.logout();
-    return res.redirect("/auth/login");
-};
+// export const cerrarSesion1 = (req, res) => {
+//     req.logout();
+//     return res.redirect("/auth/login");
+// };
 
 export const cerrarSesion = (req, res) => {
     req.logout((err) => {

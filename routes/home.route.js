@@ -13,11 +13,11 @@ import { verificarUser } from "../middlewares/userValidator.js";
 const router = Router();
 
 router.get("/", verificarUser, leerUrls);
-router.post("/", validarUrl, agregarUrl);
-router.get("/eliminar/:id", eliminarUrl);
+router.post("/", verificarUser, validarUrl, agregarUrl);
+router.get("/eliminar/:id", verificarUser, eliminarUrl);
 
-router.get("/editar/:id", editarUrl);
-router.post("/editar/:id", validarUrl, editarUrlForm);
+router.get("/editar/:id", verificarUser, editarUrl);
+router.post("/editar/:id", verificarUser, validarUrl, editarUrlForm);
 
 router.get("/:shortUrl", redireccion);
 export default router;
