@@ -1,6 +1,7 @@
 import { User } from "../models/User.js";
 import { nanoid } from "nanoid";
 import { validationResult } from "express-validator";
+import nodemailer from "nodemailer";
 
 export const registerForm = (req, res) => {
     res.render("register");
@@ -25,16 +26,38 @@ export const registerUser = async (req, res) => {
 
         await newUser.save();
 
-        // enviar correo electronico primero
+        // enviar correo electronico //
+        /*
+        const transport = nodemailer.createTransport({
+            host: "smtp.mailtrap.io",
+            port: 2525,
+            auth: {
+                user: process.env.userEmail,
+                pass: process.env.passEmail,
+            },
+        });
+        await transport.sendMail({
+            from: '"Fred Foo 👻" <foo@example.com>', // nuestro mail
+            to: newUser.email, // a quien lo estamos enviando
+            subject: "Verifica tu cuenta de correo", // Subject line
+            html: `<a href="http://localhost:3000/auth/confirmar/${newUser.tokenConfirm}">Confirma tu correo haciendo click aqui</a>`, // html body
+        });
+        */
         req.flash("mensajes", [
             { msg: "confirma tu correo electronico para ingresar" },
         ]);
+
+        // link que se manda por mail para la confirmacion de cuenta
+        req.flash("mensajes", [
+            {
+                msg: `http://localhost:3000/auth/confirmar/${newUser.tokenConfirm}`,
+            },
+        ]);
+
         res.redirect("/auth/login");
     } catch (error) {
         req.flash("mensajes", [{ msg: error.message }]);
         return res.redirect("/auth/register");
-        // return res.status(400).json(error.message);
-        // res.redirect("/auth/register");
     }
 };
 
