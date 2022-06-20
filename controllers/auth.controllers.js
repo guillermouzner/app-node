@@ -32,15 +32,15 @@ export const registerUser = async (req, res) => {
             host: "smtp.mailtrap.io",
             port: 2525,
             auth: {
-                user: process.env.userEmail,
-                pass: process.env.passEmail,
+                user: process.env.USEREMAIL,
+                pass: process.env.PASSEMAIL,
             },
         });
         await transport.sendMail({
             from: '"Fred Foo 👻" <foo@example.com>', // nuestro mail
             to: newUser.email, // a quien lo estamos enviando
             subject: "Verifica tu cuenta de correo", // Subject line
-            html: `<a href="http://localhost:3000/auth/confirmar/${newUser.tokenConfirm}">Confirma tu correo haciendo click aqui</a>`, // html body
+            html: `<a href="${PATHHEROKU || 'http://localhost:3000' }/auth/confirmar/${newUser.tokenConfirm}">Confirma tu correo haciendo click aqui</a>`, // html body
         });
         */
         req.flash("mensajes", [
@@ -50,7 +50,9 @@ export const registerUser = async (req, res) => {
         // link que se manda por mail para la confirmacion de cuenta
         req.flash("mensajes", [
             {
-                msg: `http://localhost:3000/auth/confirmar/${newUser.tokenConfirm}`,
+                msg: `${PATHHEROKU || "http://localhost:3000"}/auth/confirmar/${
+                    newUser.tokenConfirm
+                }`,
             },
         ]);
 

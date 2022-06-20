@@ -1,17 +1,9 @@
 import mongoose from "mongoose";
 
-try {
-    await mongoose.connect(process.env.DB_URL);
-    console.log("db conectada :)");
-} catch (error) {
-    console.log(error);
-}
-
-// import mongoose from "mongoose";
-
-// try {
-//     await mongoose.connect(process.env.DB_URL);
-//     console("DB conectada");
-// } catch (error) {
-//     console.log(error);
-// }
+export const clientDB = mongoose
+    .connect(process.env.DB_URL)
+    .then((m) => {
+        console.log("db conectada");
+        return m.connection.getClient();
+    })
+    .catch((err) => console.log("fallo la conexion: " + err));

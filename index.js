@@ -1,23 +1,42 @@
 import "dotenv/config";
-import "./database/connectdb.js";
+import { clientDB } from "./database/connectdb.js";
 import express from "express";
 import { create } from "express-handlebars";
 import routerHome from "./routes/home.route.js";
 import routerAuth from "./routes/auth.route.js";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import flash from "connect-flash";
+import mongoSanitize from "express-mongo-sanitize";
 import passport from "passport";
 import { User } from "./models/User.js";
 import csrf from "csurf";
+import cors from "cors";
 
 const app = express();
 
+const corsOptions = {
+    credentials: true,
+    origin: process.env.PATHHEROKU || "*",
+    methods: ["GET", "POST"],
+};
+
+app.use(cors(corsOptions));
+
 app.use(
     session({
-        secret: "keyboard cat",
+        secret: process.env.SECRETSESSION,
         resave: false,
         saveUninitialized: false,
-        name: "secret-name-web",
+        name: "session-user",
+        store: MongoStore.create({
+            clientPromise: clientDB,
+            dbName: process.env.DB_NAME,
+        }),
+        cookie: {
+            secure: process.env.MODO === "production",
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        },
     })
 );
 
@@ -49,6 +68,8 @@ const hbs = create({
 app.engine(".hbs", hbs.engine);
 app.set("view engine", ".hbs");
 app.set("views", "./views");
+
+app.use(mongoSanitize());
 
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
