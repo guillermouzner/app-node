@@ -57,6 +57,7 @@ passport.deserializeUser(async (user, done) => {
     return done(null, { id: userDB._id, userName: userDB.userName }); //se guardará en req.user
 });
 
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(csrf());
@@ -80,8 +81,6 @@ app.use((req, res, next) => {
 
 app.use("/", routerHome);
 app.use("/auth", routerAuth);
-
-app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
