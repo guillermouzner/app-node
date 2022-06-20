@@ -40,7 +40,7 @@ export const registerUser = async (req, res) => {
             from: '"Fred Foo 👻" <foo@example.com>', // nuestro mail
             to: newUser.email, // a quien lo estamos enviando
             subject: "Verifica tu cuenta de correo", // Subject line
-            html: `<a href="${PATHHEROKU || 'http://localhost:3000' }/auth/confirmar/${newUser.tokenConfirm}">Confirma tu correo haciendo click aqui</a>`, // html body
+            html: `<a href="${process.env.PATHHEROKU || 'http://localhost:3000' }/auth/confirmar/${newUser.tokenConfirm}">Confirma tu correo haciendo click aqui</a>`, // html body
         });
         */
         req.flash("mensajes", [
@@ -50,9 +50,9 @@ export const registerUser = async (req, res) => {
         // link que se manda por mail para la confirmacion de cuenta
         req.flash("mensajes", [
             {
-                msg: `${PATHHEROKU || "http://localhost:3000"}/auth/confirmar/${
-                    newUser.tokenConfirm
-                }`,
+                msg: `${
+                    process.env.PATHHEROKU || "http://localhost:3000"
+                }/auth/confirmar/${newUser.tokenConfirm}`,
             },
         ]);
 
