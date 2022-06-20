@@ -51,8 +51,8 @@ export const registerUser = async (req, res) => {
         req.flash("mensajes", [
             {
                 msg: `${
-                    process.env.PATHHEROKU || "http://localhost:3000"
-                }/auth/confirmar/${newUser.tokenConfirm}`,
+                    process.env.PATHHEROKU || "http://localhost:3000/"
+                }auth/confirmar/${newUser.tokenConfirm}`,
             },
         ]);
 
