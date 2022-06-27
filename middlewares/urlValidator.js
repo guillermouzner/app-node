@@ -1,5 +1,9 @@
 import axios from "axios";
 export const validarUrl = async (req, res, next) => {
+    /*
+     * middleware que verifica que le estamos pasando una URL valida
+     * cuando llega a axios, si no encuentra la url, salta al catch
+     */
     try {
         let { originalLink } = req.body;
 

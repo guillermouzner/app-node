@@ -2,6 +2,11 @@ import { Url } from "../models/Url.js";
 import { nanoid } from "nanoid";
 
 export const leerUrls = async (req, res) => {
+    /*
+    get("/")
+    utiliza el req.user que viene del middleware verificarUser para obtener
+    las urls que fueron creadas por el usuario activo
+    */
     try {
         const urls = await Url.find({ user: req.user.id }).lean();
         res.render("home", { urls });
@@ -12,6 +17,10 @@ export const leerUrls = async (req, res) => {
 };
 
 export const agregarUrl = async (req, res) => {
+    /*
+    post("/")
+    originalLink lo leemos desde formulario Form.hbs
+    */
     let { originalLink } = req.body;
     if (!originalLink.startsWith("https://")) {
         originalLink = "https://" + originalLink;
@@ -32,6 +41,10 @@ export const agregarUrl = async (req, res) => {
 };
 
 export const eliminarUrl = async (req, res) => {
+    /*
+    get("/eliminar/:id")
+    Llega el id como parametro y elimina en caso de que le pertenezca
+    */
     const { id } = req.params;
     try {
         const url = await Url.findById(id);
@@ -50,6 +63,10 @@ export const eliminarUrl = async (req, res) => {
 };
 
 export const editarUrl = async (req, res) => {
+    /*
+    get("/editar/:id") 
+    me lleva a la vista para editar url
+    */
     const { id } = req.params;
     try {
         const url = await Url.findById(id).lean();
@@ -64,6 +81,12 @@ export const editarUrl = async (req, res) => {
 };
 
 export const editarUrlForm = async (req, res) => {
+    /* 
+    post("/editar/:id") 
+    Edita url 
+    Busca en base de datos con el id que recibe como parametro y en caso de existir lo
+    actualiza con el nuevo link que le pasamos en el body.
+    */
     const { id } = req.params;
     let { originalLink } = req.body;
     if (!originalLink.startsWith("https://")) {
@@ -87,6 +110,12 @@ export const editarUrlForm = async (req, res) => {
 };
 
 export const redireccion = async (req, res) => {
+    /* 
+    get("/:shortUrl")
+    Cuando apretamos boton copiar/compartir
+    Busca en la base de datos el link original con el nanoid que le llega como parametro
+    y redirecciona hacia ese link original
+    */
     const { shortUrl } = req.params;
     try {
         const url = await Url.findOne({ shortUrl });

@@ -1,13 +1,22 @@
 import { User } from "../models/User.js";
 import { nanoid } from "nanoid";
 import { validationResult } from "express-validator";
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 
 export const registerForm = (req, res) => {
+    /* get("/register")
+    renderiza vista register
+    */
     res.render("register");
 };
 
 export const registerUser = async (req, res) => {
+    /* 
+    post("/register")
+    Verifica que pase las validaciones de los campos del formulario register
+    Si pasa las validaciones crea un nuevo usuario y envia un mail
+    para validar cuenta y poder ingresar
+    */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         req.flash("mensajes", errors.array());
@@ -64,6 +73,10 @@ export const registerUser = async (req, res) => {
 };
 
 export const confirmarCuenta = async (req, res) => {
+    /* 
+    get("/confirmar/:token")
+    Ruta para validar cuenta
+    */
     const { token } = req.params;
     try {
         const user = await User.findOne({ tokenConfirm: token });
@@ -82,11 +95,22 @@ export const confirmarCuenta = async (req, res) => {
     }
 };
 
-export const loginForm = (req, res) => {
+export const loginForm = (_req, res) => {
+    /* 
+    get("/login") 
+    renderiza vista login
+    */
     res.render("login");
 };
 
 export const loginUser = async (req, res) => {
+    /* 
+    post("/login")
+    Verifica que pase las validaciones de los campos del formulario login
+    Si pasa las validaciones comprueba que la cuenta exista y que esté validada
+
+    Crea una sesion a travez de passport y redirije a vista home
+    */
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         req.flash("mensajes", errors.array());
@@ -121,6 +145,10 @@ export const loginUser = async (req, res) => {
 // };
 
 export const cerrarSesion = (req, res) => {
+    /* 
+    get("/logout")
+    se cierra la sesion
+    */
     req.logout((err) => {
         if (err) return next(err);
         res.redirect("/auth/login");
